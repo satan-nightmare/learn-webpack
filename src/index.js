@@ -7,7 +7,7 @@ function component() {
   
     element.innerHTML = _.join(['Hello', 'webpack'], ' ');
 
-    btn.innerHTML = 'SUMIT Click me and check the console!';
+    btn.innerHTML = 'Click me and check the console!';
     btn.onclick = printMe;
 
     element.appendChild(btn);
@@ -15,4 +15,18 @@ function component() {
     return element;
   }
   
-  document.body.appendChild(component());
+  let element = component();
+  document.body.appendChild(element);
+
+  if (module.hot) {
+    console.log('HOOOT');
+
+    module.hot.accept('./print.js', function() {
+      console.log('Accepting updated printMe module');
+      printMe();
+
+      document.body.removeChild(element);
+      element = component();
+      document.body.append(element);
+    })
+  }

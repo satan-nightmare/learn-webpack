@@ -1,15 +1,16 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'development',
-  entry: {
-    app: './src/index.js',
-    print: './src/print.js',
-  },
+  
+  // This order in entry array is necessary for HMR
+  entry: ['webpack-hot-middleware/client', './src/index.js'],
+  
   output: {
-    filename: '[name].bundle.js',
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
   },
@@ -19,6 +20,9 @@ module.exports = {
       new HtmlWebpackPlugin({
         title: 'Output Management'
       }),
+
+      // For HMR
+      new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
       rules: [
